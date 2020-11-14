@@ -49,17 +49,27 @@ export class CanvasController {
       fileFilter: fileFilter,
     }),
   )
-  setCanvasImagedata(@UploadedFiles() data: any, @Body() body): any {
+  async setCanvasImagedata(
+    @UploadedFiles() data: any,
+    @Body() body,
+  ): Promise<any> {
     const result = [];
     const o = {};
     const { guid } = body;
+    await this.canvasService.remove(guid);
     data.forEach((d) => {
       const keySplit = d.fieldname.split('.');
       let key = '';
       if (keySplit.length === 2) {
         key = keySplit[0];
+        const re = /\d+/g;
+        const result = key.match(re)
+        const obj = {
+          type: 'page',
+          pageIndex: result[0],
+        };
         o[`${key}`] = {
-          key: `${key}`,
+          key: JSON.stringify(obj),
           width: parseInt(body[`${key}.width`]),
           height: parseInt(body[`${key}.height`]),
           data: d.buffer,
@@ -67,17 +77,32 @@ export class CanvasController {
       }
       if (keySplit.length === 3) {
         key = `${keySplit[0]}.${keySplit[1]}`;
+        const re = /\d+/g;
+        const result = key.match(re)
+        const obj = {
+          type: 'layer',
+          pageIndex: result[0],
+          layerIndex: result[1]
+        };
         o[`${key}`] = {
-          key: `${key}`,
+          key: JSON.stringify(obj),
           width: parseInt(body[`${key}.width`]),
           height: parseInt(body[`${key}.height`]),
           data: d.buffer,
         };
       }
       o[`${key}`].guid = guid;
-      result.push(this.canvasService.insertCanvas(o[`${key}`]));
+      result.push(this.canvasService.setCanvasData(o[`${key}`]));
     });
     return Promise.all(result);
+  }
+
+  @Get('imagedata/:userId/:cavasId')
+  getPages(@Param('userId') userId, @Param('cavasId') canvasId): any {
+    return this.canvasService.getCanvasData({
+      userId,
+      canvasId,
+    });
   }
 }
 

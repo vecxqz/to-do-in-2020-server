@@ -26,11 +26,27 @@ export class CanvasService {
     return this.canvasRepository.findOne(guid);
   }
 
-  async remove(guid: string): Promise<void> {
-    await this.canvasRepository.delete(guid);
+  async remove(guid: string): Promise<any> {
+    return this.canvasRepository.delete({
+      guid,
+    });
   }
 
-  async insertCanvas(canvasMeta: canvasMeta): Promise<Canvas> {
+  async getCanvasData({
+    userId,
+    canvasId,
+  }: {
+    userId: string;
+    canvasId: string;
+  }): Promise<Canvas[]> {
+    return this.canvasRepository.find({
+      where: {
+        guid: canvasId,
+      },
+    });
+  }
+
+  async setCanvasData(canvasMeta: canvasMeta): Promise<Canvas> {
     const canvas = new Canvas();
     canvas.guid = canvasMeta.guid;
     canvas.key = canvasMeta.key;
@@ -44,5 +60,4 @@ export class CanvasService {
   async insertGuid(): Promise<string> {
     return Promise.resolve(uuidv4());
   }
-
 }

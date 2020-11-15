@@ -98,7 +98,13 @@ export class CanvasController {
       o[`${key}`].guid = guid;
       result.push(this.canvasService.setCanvasData(o[`${key}`]));
     });
-    return Promise.all(result);
+    const res = await Promise.all(result);
+    return {
+      code: 200,
+      data: {
+        ...res,
+      },
+    };
   }
 
   @UseGuards(AuthGuard('jwt'))

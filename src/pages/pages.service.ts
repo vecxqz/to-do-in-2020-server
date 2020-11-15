@@ -10,7 +10,7 @@ export class PagesService {
     private pageRepository: Repository<Pages>,
   ) {}
 
-  async setPagesData(pageMeta: pageMeta): Promise<Pages> {
+  async setPagesData(pageMeta: pageMeta): Promise<any> {
     const pages = new Pages();
     const { canvasId, userId, data } = pageMeta;
     pages.canvasId = canvasId;
@@ -21,7 +21,12 @@ export class PagesService {
       canvasId,
     });
     const result = await this.pageRepository.save(pages);
-    return result;
+    return {
+      code: 200,
+      data: {
+        ...result,
+      },
+    };
   }
 
   async getPagesData({
@@ -30,14 +35,19 @@ export class PagesService {
   }: {
     userId: string;
     canvasId: string;
-  }): Promise<Pages> {
+  }): Promise<any> {
     const result = await this.pageRepository.findOne({
       where: {
         userId,
         canvasId,
       },
     });
-    return result;
+    return {
+      code: 200,
+      data: {
+        ...result,
+      },
+    };
   }
 
   async removePagesData({ userId, canvasId }: any): Promise<any> {

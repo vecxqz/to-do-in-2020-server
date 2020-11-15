@@ -14,12 +14,18 @@ export class CanvasService {
     return this.canvasRepository.find();
   }
 
-  findAllByGuid(guid: string): Promise<Canvas[]> {
-    return this.canvasRepository.find({
+  async findAllByGuid(guid: string): Promise<any> {
+    const reulst = this.canvasRepository.find({
       where: {
         guid,
       },
     });
+    return {
+      code: 200,
+      data: {
+        ...reulst,
+      },
+    };
   }
 
   findOne(guid: string): Promise<Canvas> {
@@ -38,15 +44,22 @@ export class CanvasService {
   }: {
     userId: string;
     canvasId: string;
-  }): Promise<Canvas[]> {
-    return this.canvasRepository.find({
+  }): Promise<any> {
+    const result = await this.canvasRepository.find({
       where: {
         guid: canvasId,
       },
     });
+    console.log(result);
+    return {
+      code: 200,
+      data: {
+        data: result,
+      },
+    };
   }
 
-  async setCanvasData(canvasMeta: canvasMeta): Promise<Canvas> {
+  async setCanvasData(canvasMeta: canvasMeta): Promise<any> {
     const canvas = new Canvas();
     canvas.guid = canvasMeta.guid;
     canvas.key = canvasMeta.key;
@@ -57,7 +70,12 @@ export class CanvasService {
     return result;
   }
 
-  async insertGuid(): Promise<string> {
-    return Promise.resolve(uuidv4());
+  async insertGuid(): Promise<any> {
+    return Promise.resolve({
+      code: 200,
+      data: {
+        guid: uuidv4(),
+      },
+    });
   }
 }

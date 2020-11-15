@@ -7,12 +7,15 @@ import {
   UseInterceptors,
   UploadedFile,
   UploadedFiles,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import {
   FileInterceptor,
   FilesInterceptor,
   AnyFilesInterceptor,
 } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 import { CanvasService } from './canvas.service';
 import { v4 as uuidv4 } from 'uuid';
 // import { pages } from './mock';
@@ -43,6 +46,7 @@ export class CanvasController {
     return body;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('imagedata')
   @UseInterceptors(
     AnyFilesInterceptor({
@@ -63,7 +67,7 @@ export class CanvasController {
       if (keySplit.length === 2) {
         key = keySplit[0];
         const re = /\d+/g;
-        const result = key.match(re)
+        const result = key.match(re);
         const obj = {
           type: 'page',
           pageIndex: result[0],
@@ -78,11 +82,11 @@ export class CanvasController {
       if (keySplit.length === 3) {
         key = `${keySplit[0]}.${keySplit[1]}`;
         const re = /\d+/g;
-        const result = key.match(re)
+        const result = key.match(re);
         const obj = {
           type: 'layer',
           pageIndex: result[0],
-          layerIndex: result[1]
+          layerIndex: result[1],
         };
         o[`${key}`] = {
           key: JSON.stringify(obj),
@@ -97,40 +101,18 @@ export class CanvasController {
     return Promise.all(result);
   }
 
-  @Get('imagedata/:userId/:cavasId')
-  getPages(@Param('userId') userId, @Param('cavasId') canvasId): any {
+  @UseGuards(AuthGuard('jwt'))
+  @Get('imagedata/:cavasId')
+  getPages(@Request() req, @Param('cavasId') canvasId): any {
+    const {
+      user: { id: userId },
+    } = req;
     return this.canvasService.getCanvasData({
       userId,
       canvasId,
     });
   }
 }
-
-// const img = new ImageData(6, 6);
-// img.data.fill(0xFF);
-
-// const meta = {
-//   width: img.width,
-//   height: img.height
-//   // add more metadata here if needed
-// };
-// const formdata = new FormData();
-// formdata.append("meta", JSON.stringify( meta ))
-// formdata.append("data", new Blob([img.data.buffer]));
-// fetch('/canvas', {
-//   method: 'POST',
-//   body: formdata
-// })
-// // request as ArrayBuffer
-// .then(response => response.arrayBuffer())
-// .then(buffer => {
-//  console.log(buffer)
-//   // create a new View over our ArrayBuffer
-//   const data = new Uint8ClampedArray(buffer);
-//   console.log(data)
-//   const new_img = new ImageData(data, img.width, img.height);
-//   return new_img;
-// });
 
 function fileFilter(req, file, cb) {
   const flag = file.fieldname.includes('imageData');

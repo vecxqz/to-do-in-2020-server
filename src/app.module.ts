@@ -8,13 +8,14 @@ import { Canvas } from './entities/canvas.entry';
 import { Pages } from './entities/pages.entry';
 import { User } from './entities/user.entry';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
+      port: parseInt(process.env.port),
       username: 'root',
       password: process.env.databasePassword,
       database: process.env.databaseName,
@@ -24,6 +25,7 @@ import { UserModule } from './user/user.module';
     CanvasModule,
     PagesModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
 
 // https://github.com/typeorm/typeorm/blob/master/docs/entities.md
 @Entity()
@@ -12,6 +12,20 @@ export class Pages {
   @Column()
   canvasId: string;
 
+  @Column({
+    default: '',
+  })
+  prviewUrl: string;
+
   @Column({ type: 'longtext' })
   data;
+
+  @Column({ default: false })
+  isPublic: boolean;
+
+  @Column({ default: false })
+  isDelete: boolean;
+
+  @Column({ type: 'timestamp' })
+  updateTime: Date;
 }

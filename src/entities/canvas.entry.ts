@@ -20,4 +20,7 @@ export class Canvas {
 
   @Column({ type: 'longblob', nullable: true })
   data;
+
+  @Column({ type: 'timestamp' })
+  updateTime: Date;
 }

@@ -13,4 +13,10 @@ export class User {
 
   @Column({ nullable: true })
   email: string;
+
+  @Column({ type: 'timestamp' })
+  updateTime: Date;
+
+  @Column({ default: false })
+  isDelete: boolean;
 }

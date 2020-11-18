@@ -22,10 +22,37 @@ export class AuthService {
     const payload = { username: user.username, id: user.id };
     return {
       code: 200,
+      msg: '登录成功',
       data: {
         username: user.username,
         access_token: this.jwtService.sign(payload),
       },
+    };
+  }
+
+  async register(user: any) {
+    const userExist = await this.userSerive.findOne(user.username);
+    if (userExist === undefined) {
+      const newUser = await this.userSerive.setUser({
+        username: user.username,
+        password: user.password,
+      });
+      const payload = {
+        username: newUser.username,
+        id: newUser.id,
+      };
+      return {
+        code: 200,
+        msg: '注册成功',
+        data: {
+          username: user.username,
+          access_token: this.jwtService.sign(payload),
+        },
+      };
+    }
+    return {
+      code: 401,
+      msg: '该用户名已被注册',
     };
   }
 }

@@ -50,7 +50,6 @@ export class CanvasService {
         guid: canvasId,
       },
     });
-    console.log(result);
     return {
       code: 200,
       data: {

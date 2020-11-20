@@ -22,18 +22,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: npm install and build
-        run: |
-          npm install
-          npm run build
-        env:
-          CI: true
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
           SSH_PRIVATE_KEY: ${{ secrets.TOKEN }}
           ARGS: '-avzr --delete'
-          SOURCE: 'dist/'
+          SOURCE: '/'
           REMOTE_HOST: ${{ secrets.HOST_NAME }}
           REMOTE_USER: 'root'
           TARGET: '/var/www/pixel-server'
@@ -44,5 +38,7 @@ jobs:
           username: 'root'
           key: ${{ secrets.TOKEN }}
           script: |
-            pm2 start --name pixel-art /var/www/pixel-server/main.js
-            echo pm2 run success
+            cd /var/www/pixel-server
+            npm install
+            npm run build
+            pm2 start --name pixel-art dist/main.js

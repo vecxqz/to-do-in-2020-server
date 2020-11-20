@@ -37,6 +37,13 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST_NAME }}
           REMOTE_USER: 'root'
           TARGET: '/var/www/pixel-server'
-        run: |
-          pm2 start --name pixel-art /var/www/pixel-server/main.js
-          echo pm2 run success
+        run:
+      - name: Server Start    
+            uses: appleboy/ssh-action@master
+            with:
+              host: ${{ secrets.HOST_NAME }}
+              username: 'root'
+              key: ${{ secrets.TOKEN }}
+              script: |
+                pm2 start --name pixel-art /var/www/pixel-server/main.js
+                echo pm2 run success

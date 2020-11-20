@@ -11,11 +11,14 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
+  @Column({ default: '' })
   email: string;
 
   @Column({ type: 'timestamp' })
   updateTime: Date;
+
+  @Column({ default: '' })
+  avatar: string;
 
   @Column({ default: false })
   isDelete: boolean;

@@ -41,5 +41,4 @@ jobs:
             cd /var/www/pixel-server
             npm install
             npm run build
-            pm2 start --name pixel-art dist/main.js
             pm2 start --name pixel-art-server dist/main.js -i 3

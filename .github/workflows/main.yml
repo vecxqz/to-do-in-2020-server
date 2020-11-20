@@ -46,4 +46,4 @@ jobs:
             npm run build
           #  pm2 start --name pixel-art-server dist/main.js
           #  node dist/main.js
-           pm2 start --name pixel-art-server dist/main.js -f -i 3
+            pm2 start --name pixel-art-server dist/main.js -f -i 3

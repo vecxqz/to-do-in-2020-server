@@ -31,13 +31,16 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST_NAME }}
           REMOTE_USER: 'root'
           TARGET: '/var/www/pixel-server'
-      - name: Server Start    
+      - name: Server Start
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST_NAME }}
           username: 'root'
           key: ${{ secrets.TOKEN }}
           script: |
+            export port=${{ secrets.PORT }}
+            export databasePassword=${{ secrets.DATABASE_PASSWORD }}
+            export databaseName=${{ secrets.DATABASE_NAME }}
             cd /var/www/pixel-server
             npm install
             npm run build

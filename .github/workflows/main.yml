@@ -33,7 +33,7 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.TOKEN }}
           ARGS: '-avzr --delete'
-          SOURCE: '/pixel-art/dist/'
+          SOURCE: 'dist/'
           REMOTE_HOST: ${{ secrets.HOST_NAME }}
           REMOTE_USER: 'root'
           TARGET: '/var/www/pixel-server'

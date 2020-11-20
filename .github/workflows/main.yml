@@ -37,7 +37,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST_NAME }}
           REMOTE_USER: 'root'
           TARGET: '/var/www/pixel-server'
-        run:
       - name: Server Start    
         uses: appleboy/ssh-action@master
         with:
